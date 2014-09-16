@@ -1,12 +1,17 @@
 'use strict';
 
-var fliprYaml = require('../lib/flipr-yaml');
+/**
+* Note, this sample won't run unless you have etcd running locally
+* and you have populated the my-app/config key with some JSON data.
+*/
 
-var source = fliprYaml({
-  folderPath: 'sample/config/',
-  fileName: 'basic.yaml'
+var FliprEtcd = require('../lib/flipr-etcd');
+
+var source = new FliprEtcd({
+  directory: 'my-app',
+  key: 'config'
 });
 
 source.preload(function(){
-  console.log('Config file is loaded and cached!');
+  console.log('Config is loaded and cached!');
 });
