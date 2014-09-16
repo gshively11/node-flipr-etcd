@@ -27,6 +27,12 @@ source.on(source.events.afterChange, function(){
     'to getConfig will now return the new config.');
 });
 
+source.on(source.events.error, function(){
+  var errors = Array.prototype.slice(arguments, 0);
+  console.log('An error occurred!');
+  console.dir(errors);
+});
+
 source.getConfig(function(err, config){
   console.dir(config);
 });
