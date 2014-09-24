@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Flipr source to retrieve config from etcd:  a distributed, consistent, partition-tolerant key/value store",
   "main": "lib/flipr-etcd.js",
+  "bin": {
+    "jshint": "node_modules/jshint/bin/jshint",
+    "mocha": "node_modules/mocha/bin/mocha"
+  },
   "scripts": {
     "jshint": "jshint lib test",
     "debug": "mocha --debug-brk",
