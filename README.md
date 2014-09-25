@@ -1,8 +1,6 @@
 node-flipr-etcd
 ===============
 
-A flipr source to retrieve config from etcd: a distributed, consistent, partition-tolerant key/value store.
-
 This project is part of the [flipr family](https://github.com/godaddy/node-flipr).
 
 node-flipr-etcd is a [flipr source](http://todoaddurl) for retrieving flipr configuration data from etcd, a distributed, consistent key-value store.
@@ -10,13 +8,51 @@ node-flipr-etcd is a [flipr source](http://todoaddurl) for retrieving flipr conf
 ![node-flipr](/flipr.png?raw=true "node-flipr")
 
 # How does it work?
-The examples below are just showing you how to create the flipr etcd source.  A source by itself isn't very useful.  You'll still need to give the source to flipr, so that it can use it to do awesome things.  See the [flipr documentation](http://todoaddurl) for how to use a source.
+The examples below are just showing you how to create the flipr etcd source.  A source by itself isn't very useful.  You'll still need to give the source to flipr, so that it can use it to do awesome things.  See the [flipr documentation](https://github.com/godaddy/node-flipr/blob/master/README.md) for more information on how to use a flipr source.
 
-## TODO ADD EXAMPLES
+## Basic usage
+This example shows you to how create a flipr-etcd source and give it to flipr.  This example assumes you have etcd running locally on the default port.
+```javascript
+var flipr = require('flipr');
+var FliprEtcd = require('flipr-etcd');
+var source = new FliprEtcd({
+  directory: 'my-app-name',
+  key: 'some-config'
+});
+flipr.init({
+  source: source
+});
+```
+Based on the options passed to flipr-etcd, you should be storing your application configuration under ~keys/flipr/my-app-name/some-config in etcd.
+
+## Subscribing to important events
+This example shows you the events you can subscribe to and what you might want to do when the events fire.
+
+```javascript
+var flipr = require('flipr');
+var FliprEtcd = require('flipr-etcd');
+var source = new FliprEtcd();
+source.on(source.events.error, function(err1, err2){
+  //log these errors!
+});
+source.on(source.events.beforeChange, function(){
+  //your config is about to change!
+  //log this event and do stuff
+});
+source.on(source.events.flush, function(){
+  //the cached config has now been flushed, expect
+  //the next call to getConfig to talk to etcd
+});
+source.on
+flipr.init({
+  source: source
+});
+```
+
 
 # Methods
 
-In most cases, you should not need to call flipr-etcd's methods directly, flipr takes care of that.  However, for testing or config validation, it can be necessary.
+In most cases, you should not need to call flipr-etcd's methods directly, flipr takes care of that.  However, for testing, it can be useful to know the source's interface.
 
 * `getConfig` - (cb) - Takes a callback that receives the config after it is read from etcd.  The first call to this method caches the config, which can be cleared by calling the `flush` method.
 * `preload` - (cb) - Does the same thing as getConfig.  It's called preload to fulfill flipr's expectation of a preload method on sources, which caches all data that can be cached.
